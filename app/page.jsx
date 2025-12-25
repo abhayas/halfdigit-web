@@ -82,7 +82,7 @@ export default function Home() {
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
             Bridging Enterprise Rigor with <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-indigo-600">
               Modern AI Engineering.
             </span>
           </h1>

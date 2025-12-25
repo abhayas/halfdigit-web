@@ -27,6 +27,9 @@ export default function Navbar() {
           <Link href="/titanic" className={linkClass("/titanic")}>
             Titanic Demo
           </Link>
+          <Link href="/contact" className={linkClass("/contact")}>
+            Contact Me
+          </Link>
         </div>
       </div>
     </nav>
