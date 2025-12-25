@@ -103,7 +103,26 @@ export default function TitanicModule() {
 
       <main className="max-w-7xl mx-auto px-6 py-8 grid lg:grid-cols-12 gap-8">
         
-        {/* LEFT PANEL: CONFIGURATION */}
+        {/* DESCRIPTION CARD: Layman-friendly explanation */}
+        <div className="lg:col-span-12">
+          <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 mb-6">
+            <h2 className="text-lg font-semibold text-slate-900 mb-2">About this demo</h2>
+            <p className="text-sm text-slate-600 mb-3">
+              This interactive demo shows a machine learning model that predicts whether a passenger on the
+              RMS Titanic would have survived based on a few simple details. It is an educational tool — not a
+              perfect prediction — that helps illustrate how models use features like age, sex, and travel class
+              to estimate outcomes.
+            </p>
+
+            <ul className="text-sm text-slate-600 list-disc list-inside space-y-1">
+              <li><strong>Inputs:</strong> Passenger class (1 = highest, 3 = lowest), age, sex, family count, and simple flags.</li>
+              <li><strong>Output:</strong> A prediction ("Passenger Survived" or "Did Not Survive") plus a probability showing the model's confidence.</li>
+              <li><strong>How it works:</strong> Your inputs are sent to a backend model which returns the prediction in real time. Change the input paraments in the below form and and click on "Run Inference Engine" to see the prediction</li>
+            </ul>
+          </div>
+        </div>
+
+        {/*  LEFT PANEL: CONFIGURATION */}
         <div className="lg:col-span-7 space-y-6">
           <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
             <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-6 flex items-center gap-2">
