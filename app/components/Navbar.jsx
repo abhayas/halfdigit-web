@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
+// 1. IMPORT THE NEW ICON HERE
+import { ChevronDown, BrainCircuit } from "lucide-react"; 
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -21,16 +22,21 @@ export default function Navbar() {
   }, []);
 
   const linkClass = (path) =>
-    `hover:text-sky-400 ${
+    `hover:text-sky-400 transition-colors ${
       pathname === path ? "text-sky-400 font-semibold" : "text-slate-300"
     }`;
 
   return (
-    <nav className="sticky top-0 z-50 bg-slate-900/90 backdrop-blur border-b border-slate-800">
+    <nav className="sticky top-0 z-50 bg-slate-950/90 backdrop-blur border-b border-slate-800">
       <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-        {/* Brand */}
-        <Link href="/" className="text-lg font-semibold text-slate-100">
-          Halfdigit
+        
+        {/* Brand with New "Neural Architect" Logo */}
+        <Link href="/" className="text-lg font-bold text-slate-100 flex items-center gap-2.5 hover:opacity-90 transition-opacity group">
+          <div className="relative flex items-center justify-center p-1.5 rounded-lg bg-slate-800 border border-slate-700 group-hover:border-blue-500/50 transition-colors shadow-lg shadow-blue-900/10">
+            {/* The Logo Icon */}
+            <BrainCircuit size={20} className="text-blue-400" />
+          </div>
+          <span className="tracking-tight group-hover:text-white transition-colors">HalfDigit</span>
         </Link>
 
         {/* Links */}
@@ -46,7 +52,7 @@ export default function Navbar() {
               aria-haspopup="true"
               aria-expanded={open}
               aria-controls="projects-menu"
-              className={`flex items-center gap-2 ${linkClass("/projects")}`}
+              className={`flex items-center gap-1.5 ${linkClass("/projects")}`}
             >
               My Projects <ChevronDown size={14} />
             </button>
@@ -55,18 +61,31 @@ export default function Navbar() {
               <div
                 id="projects-menu"
                 role="menu"
-                className="absolute left-1/2 transform -translate-x-1/2 mt-2 bg-slate-900/95 border border-slate-800 rounded shadow-lg py-1 px-2 min-w-[9rem] z-50"
+                className="absolute left-1/2 transform -translate-x-1/2 mt-3 bg-slate-900 border border-slate-800 rounded-lg shadow-xl py-2 min-w-[12rem] z-50 overflow-hidden"
               >
+                <div className="px-3 py-1.5 text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+                  Live Modules
+                </div>
+                
                 <Link
                   href="/titanic"
                   onClick={() => setOpen(false)}
-                  className={`block px-3 py-2 text-sm text-center rounded whitespace-nowrap ${
-                    pathname === "/titanic" ? "text-sky-400 font-semibold" : "text-slate-300"
-                  } hover:bg-slate-800`}
+                  className={`block px-4 py-2 text-sm ${
+                    pathname === "/titanic" ? "bg-blue-600/10 text-blue-400 font-medium" : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                  }`}
                 >
-                  Titanic Demo
+                  01. Titanic Survival
                 </Link>
-                {/* Add more project links here as needed */}
+
+                <div className="my-1 border-t border-slate-800"></div>
+                
+                <div className="px-3 py-1.5 text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+                  In Development
+                </div>
+
+                <span className="block px-4 py-2 text-sm text-slate-500 cursor-not-allowed">
+                  02. Loan Approval
+                </span>
               </div>
             )}
           </div>
