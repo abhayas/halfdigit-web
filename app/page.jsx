@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Layout, Server, Terminal, Activity, ShieldCheck, Database, Github, Linkedin, Mail } from 'lucide-react';
+import { ArrowRight, Layout, Server, Terminal, Activity, Database, Github } from 'lucide-react';
 
 // --- Components ---
 
@@ -247,62 +247,57 @@ export default function Home() {
               description="Production-grade classification system. Features serverless cold-start handling, request logging, and real-time probability inference."
             />
 
-            {/* Module 2: Loan Approval (Coming Soon) */}
+            {/* Module 2: Speech-to-Text (New & Live) */}
             <ProjectModule
-              title="02: Deep Learning Risk Assessor"
+              title="02: Audio Extraction Pipeline"
+              stack={['OpenAI Whisper', 'Hugging Face', 'Flask']}
+              isLive={true}
+              link="/speech-to-text"
+              description="Automated speech-to-text transcription pipeline using the Whisper Large-v3 model via Hugging Face Inference API. Handles WAV audio ingestion and text extraction."
+            />
+
+            {/* Module 3: Loan Approval (Building) */}
+            <ProjectModule
+              title="03: Deep Learning Risk Assessor"
               stack={['TensorFlow/Keras', 'Python', 'Microservice']}
               isLive={false}
               specsLink="https://github.com/abhayas/DataScience/blob/main/DeepLearning/Loan_Eligibility.ipynb"
               description="Neural Network for financial risk assessment. Currently optimizing model weights for containerized deployment on Render free tier."
             />
 
-            {/* Module 3: RAG (Planned) */}
+            {/* Module 4: RAG (Planned) */}
             <ProjectModule
-              title="03: Enterprise Doc Chat (RAG)"
+              title="04: Enterprise Doc Chat (RAG)"
               stack={['OpenAI', 'Vector DB', 'LangChain']}
               isLive={false}
               description="Retrieval-Augmented Generation system allowing secure Q&A against uploaded PDF documentation. Simulating enterprise search."
             />
 
             {/* Mini Bio / Background */}
-            <div className="p-6 bg-slate-900 rounded-lg border border-slate-800 flex flex-col justify-center text-slate-300">
+            <div className="md:col-span-2 p-6 bg-slate-900 rounded-lg border border-slate-800 flex flex-col justify-center text-slate-300">
               <h3 className="font-bold text-white mb-3 text-sm flex items-center gap-2">
                 <Terminal size={16} className="text-blue-400" /> Technical Background
               </h3>
               <p className="text-xs text-slate-400 mb-6 leading-relaxed">
-                17+ Years in IT. Transformed from SharePoint/Power Platform Expert to Data Science, AI Engineering Specialist.
-                Microsoft Certified in Azure AI, Power BI, and Power Platform and github copilot
+                17+ Years in IT. Transformed from SharePoint/Power Platform Expert to Data Science & AI Engineering Specialist.
+                Microsoft Certified in Azure AI, Power BI, and Power Platform.
               </p>
               <div className="flex flex-wrap gap-2 text-[10px]">
-                <span className="px-2 py-1 bg-slate-800 border border-blue-800 rounded  text-slate-300">AI/ ML</span>
+                <span className="px-2 py-1 bg-slate-800 border border-blue-800 rounded text-blue-300">AI/ ML</span>
                 <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">Data Science</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-blue-300">Azure AI</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">Power BI</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">MLOps</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">Flask</span>
+                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">Azure AI</span>
                 <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">Python</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">Scikit-learn</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">TensorFlow</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">Keras</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">PostgreSQL</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">Neon DB</span>
+                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">TensorFlow/Keras</span>
                 <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">Flask API</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">REST API</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">Vercel</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">Render</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">SPFX</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">Power Automate</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">Power Apps</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">SharePoint (10y+)</span>
-                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">React/Next.js</span>
-
+                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">PostgreSQL</span>
+                <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-300">Next.js</span>
               </div>
             </div>
 
           </div>
         </div>
       </section>
-     
+
     </main>
   );
 }
