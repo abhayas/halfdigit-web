@@ -65,7 +65,7 @@ export default function SpeechToTextPage() {
     }
 
     // 2. Check File Size (Updated to 25MB based on your successful 14.5MB test)
-    if (selectedFile.size > 25 * 1024 * 1024) {
+    if (selectedFile.size > 5 * 1024 * 1024) {
       setError('File is too large. Please use a file smaller than 25MB for this demo.');
       return;
     }
@@ -143,8 +143,8 @@ export default function SpeechToTextPage() {
                 <p className="font-semibold mb-1">System Capabilities (Free Tier):</p>
                 <ul className="list-disc pl-4 space-y-1 text-blue-700/80">
                   <li>Supported Formats: <strong>.wav</strong> and <strong>.mp3</strong></li>
-                  <li>Max File Size: <strong>25MB</strong> (Supports approx. 10-15 minutes of audio).</li>
-                  <li>Processing Time: Large files may take up to 2-3 minutes.</li>
+                  <li>Max File Size: <strong>5MB</strong> (Supports approx. 5 minutes of audio, hugging face api support larger audio but render free tier causes some issue).</li>
+                  <li>Processing Time: Large files may take up to 1-2 minutes.</li>
                   <li className="mt-2">
                     Need a test file? <a href="https://www.kaggle.com/datasets/pavanelisetty/sample-audio-files-for-speech-recognition" target="_blank" className="underline hover:text-blue-900 font-medium">Download sample audio files from Kaggle.</a>
                   </li>
