@@ -9,8 +9,10 @@ import {
   FileAudio, 
   Loader2, 
   CheckCircle2, 
-  AlertCircle,
-  Terminal 
+  AlertCircle, 
+  Terminal, 
+  Activity,
+  Copy
 } from 'lucide-react';
 
 export default function SpeechToTextPage() {
@@ -19,14 +21,15 @@ export default function SpeechToTextPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [dragActive, setDragActive] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  // Handle file selection
+  // --- Logic Section (Same as before) ---
+
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     validateAndSetFile(selectedFile);
   };
 
-  // Drag and Drop handlers
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -52,10 +55,7 @@ export default function SpeechToTextPage() {
     
     if (!selectedFile) return;
 
-    // 1. Check File Type (Allow WAV and MP3)
-    // Note: MP3 mime type is usually 'audio/mpeg'
     const validTypes = ['audio/wav', 'audio/x-wav', 'audio/mpeg', 'audio/mp3'];
-    // Also check extension as fallback
     const isWavOrMp3 = validTypes.includes(selectedFile.type) || 
                        /\.(wav|mp3)$/i.test(selectedFile.name);
 
@@ -64,16 +64,15 @@ export default function SpeechToTextPage() {
       return;
     }
 
-    // 2. Check File Size (Updated to 25MB based on your successful 14.5MB test)
+    // 5MB Limit Check
     if (selectedFile.size > 5 * 1024 * 1024) {
-      setError('File is too large. Please use a file smaller than 25MB for this demo.');
+      setError('File is too large. Please use a file smaller than 5MB (approx 5 mins).');
       return;
     }
 
     setFile(selectedFile);
   };
 
-  // Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) return;
@@ -81,12 +80,12 @@ export default function SpeechToTextPage() {
     setLoading(true);
     setError('');
     setTranscript('');
+    setCopied(false);
 
     const formData = new FormData();
     formData.append('audio', file);
 
     try {
-      // Note: We increased the timeout on the backend to 300s to handle these larger files.
       const response = await fetch('https://halfdigit-api.onrender.com/speech-to-text', {
         method: 'POST',
         body: formData,
@@ -107,56 +106,87 @@ export default function SpeechToTextPage() {
     }
   };
 
-  return (
-    <main className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20">
-      
-      {/* --- HEADER --- */}
-      <div className="bg-slate-900 pt-24 pb-12 px-6 border-b border-slate-800">
-        <div className="max-w-4xl mx-auto">
-          <Link href="/" className="inline-flex items-center text-slate-400 hover:text-white mb-6 transition-colors text-sm font-medium">
-            <ArrowLeft size={16} className="mr-2" /> Back to System Status
-          </Link>
-          
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 bg-blue-600/10 rounded-lg border border-blue-600/20">
-              <Mic size={32} className="text-blue-400" />
-            </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-white">Audio Extraction Pipeline</h1>
-          </div>
-          
-          <p className="text-slate-400 max-w-2xl text-lg font-light leading-relaxed">
-            Ingests raw audio files (WAV/MP3) and generates structured text transcripts using the <strong className="text-blue-300">OpenAI Whisper v3</strong> model via Hugging Face Inference API.
-          </p>
-        </div>
-      </div>
+  const copyToClipboard = () => {
+    if (transcript) {
+      navigator.clipboard.writeText(transcript);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
-      {/* --- MAIN CONTENT AREA --- */}
-      <div className="max-w-4xl mx-auto px-6 -mt-8">
-        <div className="bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden">
-          
-          <div className="p-8 md:p-10">
-            
-            {/* INSTRUCTIONS */}
-            <div className="mb-8 p-4 bg-blue-50 border border-blue-100 rounded-lg text-sm text-blue-800 flex gap-3 items-start">
-              <Terminal size={18} className="mt-0.5 flex-shrink-0 text-blue-600" />
-              <div>
-                <p className="font-semibold mb-1">System Capabilities (Free Tier):</p>
-                <ul className="list-disc pl-4 space-y-1 text-blue-700/80">
-                  <li>Supported Formats: <strong>.wav</strong> and <strong>.mp3</strong></li>
-                  <li>Max File Size: <strong>5MB</strong> (Supports approx. 5 minutes of audio, hugging face api support larger audio but render free tier causes some issue).</li>
-                  <li>Processing Time: Large files may take up to 1-2 minutes.</li>
-                  <li className="mt-2">
-                    Need a test file? <a href="https://www.kaggle.com/datasets/pavanelisetty/sample-audio-files-for-speech-recognition" target="_blank" className="underline hover:text-blue-900 font-medium">Download sample audio files from Kaggle.</a>
-                  </li>
-                </ul>
+  // --- UI Section (Matches Titanic Layout) ---
+
+  return (
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
+      
+      {/* HEADER */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="p-2 hover:bg-slate-100 rounded-md transition-colors text-slate-500">
+              <ArrowLeft size={20} />
+            </Link>
+            <div>
+              <h1 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <Mic size={18} className="text-blue-600" />
+                Module 02: Audio Extraction Pipeline
+              </h1>
+              <p className="text-xs text-slate-500 font-mono">Status: Active | Endpoint: /speech-to-text</p>
+            </div>
+          </div>
+          <div className="hidden md:flex items-center gap-2 text-xs font-mono bg-slate-100 px-3 py-1.5 rounded text-slate-600 border border-slate-200">
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            API CONNECTION: SECURE
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-6 py-8 grid lg:grid-cols-12 gap-8">
+        
+        {/* DESCRIPTION CARD */}
+        <div className="lg:col-span-12">
+          <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 mb-6">
+            <h2 className="text-lg font-semibold text-slate-900 mb-2">About this demo</h2>
+            <p className="text-sm text-slate-600 mb-3">
+              This module demonstrates an automated pipeline for converting unstructured audio data into structured text.
+              It leverages the <strong>OpenAI Whisper Large-v3</strong> model via Hugging Face Inference API to transcribe speech with high accuracy.
+            </p>
+            <ul className="text-sm text-slate-600 list-disc list-inside space-y-1">
+              <li><strong>Inputs:</strong> Raw audio files (.wav or .mp3).</li>
+              <li><strong>Output:</strong> Full text transcription.</li>
+              <li><strong>Tech Stack:</strong> Next.js Frontend → Python Flask API → Hugging Face Inference Cluster.</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* LEFT PANEL: CONFIGURATION & UPLOAD */}
+        <div className="lg:col-span-5 space-y-6">
+          <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-6 flex items-center gap-2">
+              <FileAudio size={16} /> Input Source
+            </h2>
+
+            {/* System Constraints Box */}
+            <div className="mb-6 p-3 bg-blue-50 border border-blue-100 rounded text-xs text-blue-800">
+              <p className="font-bold mb-1 flex items-center gap-2">
+                <Terminal size={12} /> System Constraints (Free Tier):
+              </p>
+              <ul className="list-disc pl-4 space-y-1 text-blue-700/80">
+                <li>Formats: <strong>.wav, .mp3</strong></li>
+                <li>Max Size: <strong>5MB</strong> (Approx. 5 mins).</li>
+                <li><em>Note: Larger files are supported by the model but restricted here to prevent server timeouts.</em></li>
+              </ul>
+              <div className="mt-2 pt-2 border-t border-blue-200/50">
+                <a href="https://www.kaggle.com/datasets/mozillaorg/common-voice" target="_blank" className="underline hover:text-blue-900 font-medium flex items-center gap-1">
+                  Get sample files form Kaggle ↗
+                </a>
               </div>
             </div>
 
-            {/* UPLOAD AREA */}
-            <form onSubmit={handleSubmit} className="space-y-6">
-              
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Drag & Drop Area */}
               <div 
-                className={`relative border-2 border-dashed rounded-xl p-10 text-center transition-all duration-200 cursor-pointer
+                className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 cursor-pointer group
                   ${dragActive ? 'border-blue-500 bg-blue-50' : 'border-slate-300 hover:border-slate-400 hover:bg-slate-50'}
                   ${file ? 'bg-green-50/50 border-green-300' : ''}
                 `}
@@ -175,95 +205,117 @@ export default function SpeechToTextPage() {
                 <div className="flex flex-col items-center justify-center pointer-events-none">
                   {file ? (
                     <>
-                      <div className="h-16 w-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4 shadow-sm">
-                        <FileAudio size={32} />
+                      <div className="h-10 w-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-2 shadow-sm">
+                        <FileAudio size={20} />
                       </div>
-                      <p className="text-lg font-semibold text-slate-800">{file.name}</p>
-                      <p className="text-sm text-slate-500 mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB • Ready to Upload</p>
+                      <p className="text-sm font-semibold text-slate-800 truncate max-w-[200px]">{file.name}</p>
+                      <p className="text-xs text-slate-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
                     </>
                   ) : (
                     <>
-                      <div className="h-16 w-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mb-4">
-                        <UploadCloud size={32} />
+                      <div className="h-10 w-10 bg-slate-100 text-slate-400 group-hover:text-slate-500 rounded-full flex items-center justify-center mb-2 transition-colors">
+                        <UploadCloud size={20} />
                       </div>
-                      <p className="text-lg font-medium text-slate-700">Drag & Drop audio file here</p>
-                      <p className="text-sm text-slate-400 mt-2">Supports .wav and .mp3</p>
+                      <p className="text-sm font-medium text-slate-700">Click or Drag audio here</p>
                     </>
                   )}
                 </div>
               </div>
 
-              {/* ERROR MESSAGE */}
+              {/* Error Message */}
               {error && (
-                <div className="p-4 bg-red-50 border border-red-100 text-red-700 rounded-lg flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
-                  <AlertCircle size={20} />
+                <div className="p-3 bg-red-50 border border-red-100 text-red-700 rounded text-xs flex items-center gap-2">
+                  <AlertCircle size={14} />
                   {error}
                 </div>
               )}
 
-              {/* ACTION BUTTON */}
-              <button
-                type="submit"
-                disabled={!file || loading}
-                className={`w-full py-4 px-6 rounded-lg text-white font-bold text-lg shadow-lg transition-all flex items-center justify-center gap-3
-                  ${!file || loading 
-                    ? 'bg-slate-300 cursor-not-allowed shadow-none text-slate-500' 
-                    : 'bg-blue-600 hover:bg-blue-500 hover:shadow-blue-500/30 active:scale-[0.99]'}
-                `}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 size={24} className="animate-spin" />
-                    Initializing Whisper Model...
-                  </>
-                ) : (
-                  <>
-                    <Mic size={24} />
-                    Start Transcription
-                  </>
-                )}
-              </button>
-
+              {/* Submit Button */}
+              <div className="pt-2">
+                <button 
+                  type="submit" 
+                  disabled={!file || loading}
+                  className={`w-full flex items-center justify-center gap-2 px-6 py-2.5 rounded-md font-medium text-white transition-all
+                    ${!file || loading 
+                      ? 'bg-slate-300 cursor-not-allowed' 
+                      : 'bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg'}`}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" /> Processing...
+                    </>
+                  ) : (
+                    <>
+                      <Mic size={16} /> Start Transcription
+                    </>
+                  )}
+                </button>
+              </div>
             </form>
           </div>
-
-          {/* RESULTS AREA */}
-          {(transcript || loading) && (
-             <div className="border-t border-slate-200 bg-slate-50/50 p-8 md:p-10">
-               <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                 {loading ? 'Processing Stream' : 'Output Transcript'}
-                 {!loading && <CheckCircle2 size={16} className="text-green-500" />}
-               </h3>
-               
-               <div className={`rounded-lg border p-6 min-h-[150px] font-mono text-sm leading-relaxed transition-all
-                  ${loading ? 'bg-white border-slate-200 text-slate-400 animate-pulse' : 'bg-white border-slate-300 text-slate-800 shadow-sm'}
-               `}>
-                 {loading ? (
-                   <div className="space-y-3">
-                     <div className="h-2 bg-slate-100 rounded w-3/4"></div>
-                     <div className="h-2 bg-slate-100 rounded w-full"></div>
-                     <div className="h-2 bg-slate-100 rounded w-5/6"></div>
-                   </div>
-                 ) : (
-                   transcript
-                 )}
-               </div>
-
-               {!loading && transcript && (
-                 <div className="mt-4 flex justify-end">
-                   <button 
-                     onClick={() => navigator.clipboard.writeText(transcript)}
-                     className="text-xs font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1"
-                   >
-                     Copy to Clipboard
-                   </button>
-                 </div>
-               )}
-             </div>
-          )}
-
         </div>
-      </div>
-    </main>
+
+        {/* RIGHT PANEL: OUTPUT CONSOLE */}
+        <div className="lg:col-span-7 space-y-6">
+          <div className="bg-slate-900 rounded-lg shadow-lg overflow-hidden border border-slate-700 h-full min-h-[400px] flex flex-col">
+            
+            {/* Console Header */}
+            <div className="bg-slate-800 px-4 py-3 border-b border-slate-700 flex justify-between items-center flex-shrink-0">
+               <span className="text-xs font-mono text-slate-300 flex items-center gap-2">
+                 <Terminal size={14} /> TRANSCRIPTION OUTPUT
+               </span>
+               {transcript && (
+                 <button 
+                   onClick={copyToClipboard}
+                   className="text-[10px] uppercase font-bold px-2 py-1 rounded bg-slate-700 hover:bg-slate-600 text-slate-300 transition-colors flex items-center gap-1"
+                 >
+                   {copied ? <CheckCircle2 size={10} className="text-green-400" /> : <Copy size={10} />}
+                   {copied ? 'COPIED' : 'COPY TEXT'}
+                 </button>
+               )}
+            </div>
+            
+            {/* Console Body */}
+            <div className="p-6 flex-grow flex flex-col relative bg-slate-900">
+              
+              {/* Idle State */}
+              {!transcript && !loading && (
+                 <div className="flex-grow flex flex-col items-center justify-center text-slate-600">
+                    <Activity size={48} className="mx-auto mb-4 opacity-20" />
+                    <p className="text-sm font-mono">Waiting for input stream...</p>
+                 </div>
+              )}
+
+              {/* Loading State */}
+              {loading && (
+                 <div className="flex-grow flex flex-col items-center justify-center">
+                    <div className="relative w-16 h-16 mb-4">
+                      <div className="absolute inset-0 border-4 border-slate-700 rounded-full"></div>
+                      <div className="absolute inset-0 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+                    </div>
+                    <p className="text-blue-400 text-xs font-mono animate-pulse">
+                       Ingesting audio & generating tokens...
+                    </p>
+                 </div>
+              )}
+
+              {/* Result State */}
+              {transcript && !loading && (
+                <div className="w-full h-full overflow-y-auto custom-scrollbar">
+                   <div className="font-mono text-sm text-slate-300 leading-relaxed whitespace-pre-wrap">
+                      <span className="text-green-500 mr-2">➜</span>
+                      {transcript}
+                   </div>
+                   <div className="mt-4 pt-4 border-t border-slate-800 text-xs text-slate-500 font-mono">
+                      [End of stream]
+                   </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
   );
 }
