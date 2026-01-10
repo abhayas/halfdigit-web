@@ -143,7 +143,7 @@ export default function Home() {
               {/* --- ARCHITECTURE STACK (Inside the card now) --- */}
               <div className="mt-auto bg-slate-50/80 rounded-xl border border-slate-100 p-6 shadow-inner">
                 <div className="flex items-center gap-2 mb-4 border-b border-slate-200 pb-2">
-                  <span className="text-slate-400 font-mono text-xs font-bold uppercase tracking-wider">site Architecture</span>
+                  <span className="text-slate-400 font-mono text-xs font-bold uppercase tracking-wider">HalfDigit.com site Architecture</span>
                 </div>
                 <div className="space-y-4 relative">
                   {/* Connecting Line */}
@@ -219,7 +219,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="font-bold text-slate-900 text-xl">About Abhaya</h3>
-                    <p className="text-blue-600 text-xs font-bold tracking-wide mt-1 uppercase">Senior Data Science & AI Engineer</p>
+                    <p className="text-blue-600 text-xs font-bold tracking-wide mt-1 uppercase">Data Science & AI Engineer</p>
                   </div>
                 </div>
 
