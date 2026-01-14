@@ -15,16 +15,14 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
 
-  
+
   return (
     <html lang="en">
-      <body>
+      <body className="pb-24 sm:pb-0">
         <Navbar />
         {children}
-        
-        <ChatBot />
-        
         <Footer />
+        <ChatBot />
       </body>
     </html>
   );
