@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Layout, Server, Terminal, Activity, Database, Github, User } from 'lucide-react';
 
+
+
 // --- Components ---
 
 const TechBadge = ({ label }) => (

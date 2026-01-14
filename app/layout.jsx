@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import ChatBot from "./components/ChatBot";
 
 export const metadata = {
   title: 'HalfDigit | AI Engineering | Abhay Sahu',
@@ -20,6 +21,9 @@ export default function RootLayout({ children }) {
       <body>
         <Navbar />
         {children}
+        
+        <ChatBot />
+        
         <Footer />
       </body>
     </html>
