@@ -42,8 +42,8 @@ export default function ChatBot() {
 
     try {
       // Toggle URL for Prod/Dev
-      // const API_URL = 'https://halfdigit-api.onrender.com/chat-about-me';
-      const API_URL = 'http://localhost:8000/chat-about-me';
+      const API_URL = 'https://halfdigit-api.onrender.com/chat-about-me';
+      //const API_URL = 'http://localhost:8000/chat-about-me';
 
       const res = await fetch(API_URL, {
         method: 'POST',
