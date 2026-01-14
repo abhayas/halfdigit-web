@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Bot, X, MessageCircle, Sparkles } from 'lucide-react';
+import Link from 'next/link';
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,7 +9,19 @@ export default function ChatBot() {
   
   const initialMessage = { 
     role: 'bot', 
-    text: 'Hi! I am Abhaya\'s AI Assistant. Ask me anything about his experience, projects, or skills.' 
+    text: (
+      <span>
+        Hi! I am Abhaya's AI Assistant. Ask me anything about his experience, projects, or skills.
+        <br className="mb-2" />
+        <span className="text-xs text-slate-500 italic">
+          ( AI-generated content. Please{' '}
+          <Link href="/contact" className="underline text-blue-600 hover:text-blue-800">
+            verify with Abhay
+          </Link>
+          {' '} )
+        </span>
+      </span>
+    )
   };
 
   const [messages, setMessages] = useState([initialMessage]);
@@ -19,6 +32,16 @@ export default function ChatBot() {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+useEffect(() => {
+    const handleOpenEvent = () => setIsOpen(true);
+    
+    // Listen for the custom event
+    window.addEventListener('openChatBot', handleOpenEvent);
+    
+    // Cleanup when component unmounts
+    return () => window.removeEventListener('openChatBot', handleOpenEvent);
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
@@ -70,7 +93,7 @@ export default function ChatBot() {
         `}
       >
         {/* Header */}
-        <div className="bg-slate-900 p-4 flex items-center justify-between">
+        <div className="bg-blue-600 p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="bg-gradient-to-tr from-blue-500 to-purple-500 p-2 rounded-lg">
               <Bot className="text-white" size={20} />
@@ -79,13 +102,13 @@ export default function ChatBot() {
               <h3 className="text-white font-bold text-sm flex items-center gap-1">
                 Abhaya's AI <Sparkles size={12} className="text-yellow-400" />
               </h3>
-              <p className="text-slate-400 text-[11px] leading-tight">Ask me about projects & skills</p>
+              <p className="text-blue-100 text-[11px] leading-tight">Ask me about projects & skills</p>
             </div>
           </div>
           
           <button 
             onClick={handleClose}
-            className="text-slate-400 hover:text-white transition-colors p-1 hover:bg-white/10 rounded-full"
+            className="cursor-pointer text-white/90 hover:text-white transition-colors p-1 hover:bg-white/10 rounded-full"
           >
             <X size={18} />
           </button>
@@ -97,7 +120,7 @@ export default function ChatBot() {
             <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${
                 msg.role === 'user' 
-                  ? 'bg-slate-900 text-white rounded-br-none' 
+                  ? 'bg-blue-600 text-white rounded-br-none' 
                   : 'bg-white border border-slate-200 text-slate-700 rounded-bl-none'
               }`}>
                 {msg.text}
@@ -146,10 +169,10 @@ export default function ChatBot() {
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className={`
-          pointer-events-auto shadow-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium
+          cursor-pointer pointer-events-auto shadow-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium
           ${isOpen 
-            ? 'w-12 h-12 rounded-full bg-white text-slate-600 hover:bg-slate-100 border border-slate-200' 
-            : 'px-6 py-3.5 rounded-full bg-slate-900 text-white hover:bg-slate-800 hover:scale-105'
+            ? 'w-12 h-12 rounded-full bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100' 
+            : 'px-6 py-3.5 rounded-full bg-blue-600 text-white hover:bg-blue-700 hover:scale-105'
           }
         `}
       >
@@ -157,12 +180,11 @@ export default function ChatBot() {
           <X size={24} />
         ) : (
           <>
-            <MessageCircle size={20} fill="currentColor" className="text-blue-400" />
-            <span>Chat with Abhaya's AI</span>
+            <MessageCircle size={20} className="text-white " />
+            <span >Chat with Abhaya's AI</span>
           </>
         )}
       </button>
-
     </div>
   );
 }

@@ -3,7 +3,9 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Layout, Server, Terminal, Activity, Database, Github, User } from 'lucide-react';
+import { ArrowRight, Layout, Server, Terminal, Activity, Database, Github, User, MessageCircle } from 'lucide-react';
+
+
 
 
 
@@ -15,7 +17,7 @@ const TechBadge = ({ label }) => (
   </span>
 );
 
-const ProjectModule = ({ title, stack, isLive, description, link, specs }) => (
+const ProjectModule = ({ title, stack, isLive, description, link, specs, buttonname, onClick }) => (
   <div className="group relative bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-blue-200 flex flex-col h-full">
     <div className="flex justify-between items-start mb-4">
       <div>
@@ -43,12 +45,22 @@ const ProjectModule = ({ title, stack, isLive, description, link, specs }) => (
       {description}
     </p>
     <div className="flex items-center gap-3 mt-auto pt-4 border-t border-slate-50 flex-wrap">
-      {link ? (
+      {onClick ? (
+        <button
+          type="button"
+          onClick={onClick}
+          className="cursor-pointer inline-flex items-center gap-2 text-sm font-medium bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors shadow-md hover:shadow-lg"
+        >
+          {buttonname} <ArrowRight size={14} />
+        </button>
+      ) : link ? (
         <Link
           href={link}
-          className="inline-flex items-center gap-2 text-sm font-medium text-white bg-slate-900 px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors shadow-md hover:shadow-lg"
+          target={link.startsWith('http') ? "_blank" : "_self"}
+          rel={link.startsWith('http') ? "noopener noreferrer" : undefined}
+          className="inline-flex items-center gap-2 text-sm font-medium bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors shadow-md hover:shadow-lg"
         >
-          Initialize Module <ArrowRight size={14} />
+          {buttonname} <ArrowRight size={14} />
         </Link>
       ) : (
         <button disabled className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 bg-slate-100 px-4 py-2 rounded-lg cursor-not-allowed border border-slate-200">
@@ -99,6 +111,11 @@ export default function Home() {
     };
     logVisit();
   }, []);
+
+  const openChatBot = () => {
+    // This triggers the listener we added in ChatBot.jsx
+    window.dispatchEvent(new Event('openChatBot'));
+  };
 
   return (
     <main className="min-h-screen bg-white font-sans selection:bg-blue-100 text-slate-900">
@@ -287,6 +304,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-2 gap-8">
             <ProjectModule
+              buttonname="Live Demo"
               title="01: Passenger Survival Engine"
               stack={['Scikit-learn', 'Flask', 'REST API']}
               isLive={true}
@@ -297,6 +315,7 @@ export default function Home() {
               description="Production-grade classification system. Features serverless cold-start handling, request logging, and real-time probability inference."
             />
             <ProjectModule
+              buttonname="Live Demo"
               title="02: Audio Extraction Pipeline"
               stack={['OpenAI Whisper', 'Hugging Face', 'Flask']}
               isLive={true}
@@ -308,6 +327,18 @@ export default function Home() {
               description="Automated speech-to-text transcription pipeline using the Whisper Large-v3 model via Hugging Face Inference API. Handles WAV/MP3 audio ingestion."
             />
             <ProjectModule
+              buttonname={<><MessageCircle size={14}/>Chat with Abhaya's AI</>}
+              title="03: Portfolio AI Assistant (RAG)"
+              stack={['LangChain', 'GPT-4o', 'FAISS', 'React']}
+              isLive={true}
+              onClick={openChatBot}
+              specs={[
+                { label: 'RAG Pipeline', url: 'https://github.com/abhayas/halfdigit-api/blob/main/rag.py' },
+                { label: 'Chat UI', url: 'https://github.com/abhayas/halfdigit-web/blob/main/app/components/ChatBot.jsx' }
+              ]}
+              description="Context-aware AI agent that answers questions about my background. Built with LangChain & FAISS to ground GPT-4o responses in factual resume data. (See bottom right)"
+            />
+            <ProjectModule
               title="03: Deep Learning Risk Assessor"
               stack={['TensorFlow/Keras', 'Python', 'Microservice']}
               isLive={false}
@@ -316,12 +347,7 @@ export default function Home() {
               ]}
               description="Neural Network for financial risk assessment. Currently optimizing model weights for containerized deployment on Render free tier."
             />
-            <ProjectModule
-              title="04: Enterprise Doc Chat (RAG)"
-              stack={['OpenAI', 'Vector DB', 'LangChain']}
-              isLive={false}
-              description="Retrieval-Augmented Generation system allowing secure Q&A against uploaded PDF documentation. Simulating enterprise search."
-            />
+            
           </div>
         </div>
       </section>
