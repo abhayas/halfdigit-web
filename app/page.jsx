@@ -3,8 +3,8 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Layout, Server, Terminal, Activity, Database, Github, User, MessageCircle } from 'lucide-react';
-
+import { ArrowRight, Layout, Server, Terminal, Activity, Database, Github, User, MessageCircle, Info } from 'lucide-react';
+import ExpCalculator from "./components/ExpCalculator"
 
 
 
@@ -113,16 +113,17 @@ export default function Home() {
   }, []);
 
   const openChatBot = () => {
-    // This triggers the listener we added in ChatBot.jsx
     window.dispatchEvent(new Event('openChatBot'));
   };
 
+  // Calculate exact experience
+  
   return (
     <main className="min-h-screen bg-white font-sans selection:bg-blue-100 text-slate-900">
-      
+
       {/* 1. HERO SECTION: Light Theme */}
       <section className="relative pt-6 pb-10 px-6 border-b border-slate-100 overflow-hidden bg-white">
-        
+
         {/* --- LIGHT BACKGROUND GRID --- */}
         <div className="absolute inset-0 bg-white">
           <div className="absolute h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
@@ -137,9 +138,9 @@ export default function Home() {
         {/* --- FOREGROUND CONTENT --- */}
         {/* CHANGED: max-w-7xl to max-w-6xl to match the bottom modules section */}
         <div className="relative z-10 max-w-6xl mx-auto">
-          
+
           <div className="grid lg:grid-cols-2 gap-8 items-stretch">
-            
+
             {/* LEFT COL: Now wrapped in a Card to match the style of the Right Col */}
             <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-xl flex flex-col relative overflow-hidden">
               <div className="mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -220,7 +221,7 @@ export default function Home() {
             {/* RIGHT COL: Personal Bio Card */}
             {/* CHANGED: Removed justify-between to fix whitespace gap */}
             <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-xl relative overflow-hidden flex flex-col h-full hover:shadow-2xl transition-shadow duration-500">
-              
+
               <div className="relative z-10">
                 {/* Header */}
                 <div className="flex items-center gap-5 mb-6">
@@ -241,10 +242,13 @@ export default function Home() {
                     <p className="text-blue-600 text-xs font-bold tracking-wide mt-1 uppercase">Data Science & AI Engineer</p>
                   </div>
                 </div>
+                
 
                 <p className="text-lg text-slate-600 mb-10 leading-relaxed max-w-xl font-light">
-                  With over <strong className="text-slate-900 font-semibold">17+ years in IT</strong>, I have transformed from a SharePoint & Power Platform Expert into a specialized Data Science & AI Engineer. I hold Microsoft Certifications in Azure AI, Power BI, and Power Platform.
+                  With over <ExpCalculator /> in IT, I have transformed from a SharePoint & Power Platform Expert into a specialized Data Science & AI Engineer. I hold Microsoft Certifications in Azure AI, Power BI, and Power Platform.
                 </p>
+
+
 
                 <div className="mb-2">
                   <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3">Core Competencies</h4>
@@ -327,7 +331,7 @@ export default function Home() {
               description="Automated speech-to-text transcription pipeline using the Whisper Large-v3 model via Hugging Face Inference API. Handles WAV/MP3 audio ingestion."
             />
             <ProjectModule
-              buttonname={<><MessageCircle size={14}/>Chat with Abhaya's AI</>}
+              buttonname={<><MessageCircle size={14} />Chat with Abhaya's AI</>}
               title="03: Portfolio AI Assistant (RAG)"
               stack={['LangChain', 'GPT-4o', 'FAISS', 'React']}
               isLive={true}
@@ -347,7 +351,7 @@ export default function Home() {
               ]}
               description="Neural Network for financial risk assessment. Currently optimizing model weights for containerized deployment on Render free tier."
             />
-            
+
           </div>
         </div>
       </section>
