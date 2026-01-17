@@ -103,7 +103,7 @@ const openChatBot = () => {
                     pathname === "/#modules" ? "bg-blue-50 text-blue-700 font-medium" : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
                   }`}
                 >
-                  03. RAG chatbot
+                  03. Portfolio AI Assistant (RAG)
                 </Link>
 
                 <div className="my-1 border-t border-slate-100"></div>
