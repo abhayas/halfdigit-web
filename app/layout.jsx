@@ -22,6 +22,7 @@ export default function RootLayout({ children }) {
       <body className="pb-24 sm:pb-0">
         <Navbar />
         {children}
+        <Analytics />
         <Footer />
         <ChatBot />
       </body>
