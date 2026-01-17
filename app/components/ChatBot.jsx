@@ -2,23 +2,37 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Bot, X, MessageCircle, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image'
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
-  
-  const initialMessage = { 
-    role: 'bot', 
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setTimeout(() => {
+      setMessages([initialMessage]);
+    }, 300);
+  };
+
+  const initialMessage = {
+    role: 'bot',
     text: (
       <span>
-        Hi! I am Abhaya's AI Assistant. Ask me anything about his experience, projects, or skills.
-        <br className="mb-2" />
-        <span className="text-xs text-slate-500 italic">
-          ( AI-generated content. Please{' '}
-          <Link href="/contact" className="underline text-blue-600 hover:text-blue-800">
-            verify with Abhay
+        Hi! I am Abhaya's AI Assistant. Ask me about Abhaya's projects, skills and experience
+
+        {/* Cold Start Warning Block */}
+        <span className="block mt-2 mb-2 p-2 bg-amber-50 border border-amber-100 rounded text-amber-700 text-xs font-medium">
+          Note: The first reply might take 60-90 seconds due to server cold start (Render free tier).
+        </span>
+
+        {/* Disclaimer Footer */}
+        <span className="text-xs text-slate-400 italic">
+          (AI-generated content. Please{' '}
+          <Link onClick={handleClose} href="/contact" className="underline text-slate-500 hover:text-blue-600">
+            verify with Abhaya
           </Link>
-          {' '} )
+          {' '})
         </span>
       </span>
     )
@@ -33,12 +47,12 @@ export default function ChatBot() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-useEffect(() => {
+  useEffect(() => {
     const handleOpenEvent = () => setIsOpen(true);
-    
+
     // Listen for the custom event
     window.addEventListener('openChatBot', handleOpenEvent);
-    
+
     // Cleanup when component unmounts
     return () => window.removeEventListener('openChatBot', handleOpenEvent);
   }, []);
@@ -48,12 +62,7 @@ useEffect(() => {
   }, [messages, isOpen]);
 
   // Handle Close & Clear
-  const handleClose = () => {
-    setIsOpen(false);
-    setTimeout(() => {
-      setMessages([initialMessage]);
-    }, 300);
-  };
+
 
   const handleSend = async () => {
     if (!query.trim()) return;
@@ -74,7 +83,7 @@ useEffect(() => {
         body: JSON.stringify({ query: query })
       });
       const data = await res.json();
-      
+
       setMessages(prev => [...prev, { role: 'bot', text: data.answer }]);
     } catch (err) {
       setMessages(prev => [...prev, { role: 'bot', text: 'Sorry, I am having trouble connecting to the server.' }]);
@@ -84,9 +93,9 @@ useEffect(() => {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">
-      
+
       {/* --- CHAT WINDOW --- */}
-      <div 
+      <div
         className={`
           pointer-events-auto bg-white w-[350px] sm:w-[380px] rounded-2xl shadow-2xl border border-slate-200 overflow-hidden mb-4 transition-all duration-300 origin-bottom-right
           ${isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-10 h-0'}
@@ -96,33 +105,37 @@ useEffect(() => {
         <div className="bg-blue-600 p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="bg-gradient-to-tr from-blue-500 to-purple-500 p-2 rounded-lg">
-              <Bot className="text-white" size={20} />
-            </div>
+              <Image
+                src="/icon.svg"
+                alt="AI Icon"
+                width={20}
+                height={20}
+                className="w-5 h-5" // Ensures it stays the same size as the old icon
+              />            </div>
             <div>
               <h3 className="text-white font-bold text-sm flex items-center gap-1">
-                Abhaya's AI <Sparkles size={12} className="text-yellow-400" />
+                Abhaya's AI 
               </h3>
-              <p className="text-blue-100 text-[11px] leading-tight">Ask me about projects & skills</p>
+              <p className="text-blue-100 text-[11px] leading-tight">Ask me about Abhaya's projects, skills and experience </p>
             </div>
           </div>
-          
-          <button 
+
+          <button
             onClick={handleClose}
             className="cursor-pointer text-white/90 hover:text-white transition-colors p-1 hover:bg-white/10 rounded-full"
           >
             <X size={18} />
           </button>
         </div>
-        
+
         {/* Messages Area */}
         <div className="h-[400px] overflow-y-auto p-4 space-y-4 bg-slate-50 scrollbar-thin scrollbar-thumb-slate-200">
           {messages.map((msg, idx) => (
             <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${
-                msg.role === 'user' 
-                  ? 'bg-blue-600 text-white rounded-br-none' 
+              <div className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.role === 'user'
+                  ? 'bg-blue-600 text-white rounded-br-none'
                   : 'bg-white border border-slate-200 text-slate-700 rounded-bl-none'
-              }`}>
+                }`}>
                 {msg.text}
               </div>
             </div>
@@ -141,21 +154,21 @@ useEffect(() => {
 
         {/* Input Area */}
         <div className="p-3 bg-white border-t border-slate-100 flex gap-2">
-          <input 
-            type="text" 
+          <input
+            type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
             placeholder="Type your question..."
             className="flex-1 text-sm px-4 py-2.5 bg-slate-100 border-none rounded-full focus:outline-none focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400"
           />
-          <button 
+          <button
             onClick={handleSend}
             disabled={loading}
             className={`
               p-2.5 rounded-full transition-all duration-200
-              ${query.trim() 
-                ? 'bg-blue-600 text-white shadow-md hover:bg-blue-700 hover:scale-105' 
+              ${query.trim()
+                ? 'bg-blue-600 text-white shadow-md hover:bg-blue-700 hover:scale-105'
                 : 'bg-slate-100 text-slate-300 cursor-not-allowed'
               }
             `}
@@ -166,12 +179,12 @@ useEffect(() => {
       </div>
 
       {/* --- FLOATING TOGGLE BUTTON --- */}
-      <button 
+      <button
         onClick={() => setIsOpen(!isOpen)}
         className={`
           cursor-pointer pointer-events-auto shadow-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium
-          ${isOpen 
-            ? 'w-12 h-12 rounded-full bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100' 
+          ${isOpen
+            ? 'w-12 h-12 rounded-full bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100'
             : 'px-6 py-3.5 rounded-full bg-blue-600 text-white hover:bg-blue-700 hover:scale-105'
           }
         `}
