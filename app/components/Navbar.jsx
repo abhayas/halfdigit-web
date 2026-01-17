@@ -6,6 +6,9 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronDown, BrainCircuit } from "lucide-react"; 
 
 export default function Navbar() {
+
+
+
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -19,6 +22,11 @@ export default function Navbar() {
     document.addEventListener("click", handleClick);
     return () => document.removeEventListener("click", handleClick);
   }, []);
+
+const openChatBot = () => {
+    // This triggers the listener we added in ChatBot.jsx
+    window.dispatchEvent(new Event('openChatBot'));
+  };
 
   // Updated link styles for Light Theme
   const linkClass = (path) =>
@@ -88,6 +96,15 @@ export default function Navbar() {
                 >
                   02. Audio Extraction
                 </Link>
+                <Link
+                  href="/#modules"
+                  onClick={openChatBot}
+                  className={`block px-4 py-2.5 text-sm transition-colors ${
+                    pathname === "/#modules" ? "bg-blue-50 text-blue-700 font-medium" : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                  }`}
+                >
+                  03. RAG chatbot
+                </Link>
 
                 <div className="my-1 border-t border-slate-100"></div>
                 
@@ -96,7 +113,7 @@ export default function Navbar() {
                 </div>
 
                 <span className="block px-4 py-2 text-sm text-slate-400 cursor-not-allowed italic">
-                  03. Loan Approval
+                  04. Loan Approval
                 </span>
               </div>
             )}

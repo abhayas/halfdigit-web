@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Send, Bot, X, MessageCircle, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image'
+import ReactMarkdown from 'react-markdown'
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -114,7 +115,7 @@ export default function ChatBot() {
               />            </div>
             <div>
               <h3 className="text-white font-bold text-sm flex items-center gap-1">
-                Abhaya's AI 
+                Abhaya's AI
               </h3>
               <p className="text-blue-100 text-[11px] leading-tight">Ask me about Abhaya's projects, skills and experience </p>
             </div>
@@ -133,10 +134,22 @@ export default function ChatBot() {
           {messages.map((msg, idx) => (
             <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.role === 'user'
-                  ? 'bg-blue-600 text-white rounded-br-none'
-                  : 'bg-white border border-slate-200 text-slate-700 rounded-bl-none'
+                ? 'bg-blue-600 text-white rounded-br-none'
+                : 'bg-white border border-slate-200 text-slate-700 rounded-bl-none'
                 }`}>
-                {msg.text}
+                {typeof msg.text === 'string' ? (
+
+                  <ReactMarkdown
+                    components={{
+                      // Custom styling for Markdown elements to look good in Tailwind
+                      strong: ({ node, ...props }) => <span className="font-bold" {...props} />,
+                      a: ({ node, ...props }) => <a className="text-blue-600 underline hover:text-blue-800" target="_blank" rel="noopener noreferrer" {...props} />,
+                      ul: ({ node, ...props }) => <ul className="list-disc pl-4 space-y-1 my-2" {...props} />,
+                      ol: ({ node, ...props }) => <ol className="list-decimal pl-4 space-y-1 my-2" {...props} />,
+                      li: ({ node, ...props }) => <li className="pl-1" {...props} />,
+                      p: ({ node, ...props }) => <p className="mb-2 last:mb-0" {...props} />
+                    }}
+                  >{msg.text}</ReactMarkdown>) : (msg.text)}
               </div>
             </div>
           ))}
@@ -159,7 +172,7 @@ export default function ChatBot() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Type your question..."
+            placeholder="e.g. What certifications has Abhaya done?..."
             className="flex-1 text-sm px-4 py-2.5 bg-slate-100 border-none rounded-full focus:outline-none focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400"
           />
           <button
