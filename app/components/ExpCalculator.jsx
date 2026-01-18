@@ -17,7 +17,7 @@ function ExpCalculatorClient({ years, months, days, todayFormatted }) {
           {years} Years, {months} Months, {days} Days
         </span>
         <span className="text-slate-400 italic text-[10px] mt-1 pt-1 border-t border-slate-700 w-full">
-          as of {todayFormatted}
+          as of Today {todayFormatted}
         </span>
         <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900"></span>
       </span>
