@@ -19,7 +19,9 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body className="pb-24 sm:pb-0">
+      <body className="pb-24 sm:pb-0"
+      suppressHydrationWarning={true}
+      >
         <Navbar />
         {children}
         <Analytics />

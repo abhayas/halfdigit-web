@@ -78,6 +78,9 @@ export default function ChatBot() {
       const API_URL = 'https://halfdigit-api.onrender.com/chat-about-me';
       //const API_URL = 'http://localhost:8000/chat-about-me';
 
+      const urlParams = new URLSearchParams(window.location.search);
+      const source = urlParams.get('utm_source') || 'portfolio_direct';
+
       const res = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -93,12 +96,12 @@ export default function ChatBot() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end pointer-events-none">
 
       {/* --- CHAT WINDOW --- */}
       <div
         className={`
-          pointer-events-auto bg-white w-[350px] sm:w-[380px] rounded-2xl shadow-2xl border border-slate-200 overflow-hidden mb-4 transition-all duration-300 origin-bottom-right
+          pointer-events-auto bg-white w-[calc(100vw-2rem] sm:w-[380px] rounded-2xl shadow-2xl border border-slate-200 overflow-hidden mb-4 transition-all duration-300 origin-bottom-right
           ${isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-10 h-0'}
         `}
       >
@@ -130,7 +133,7 @@ export default function ChatBot() {
         </div>
 
         {/* Messages Area */}
-        <div className="h-[400px] overflow-y-auto p-4 space-y-4 bg-slate-50 scrollbar-thin scrollbar-thumb-slate-200">
+        <div className="h-[50vh] sm:h-[400px] overflow-y-auto p-4 space-y-4 bg-slate-50 scrollbar-thin scrollbar-thumb-slate-200">
           {messages.map((msg, idx) => (
             <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.role === 'user'

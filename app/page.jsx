@@ -94,23 +94,23 @@ const ProjectModule = ({ title, stack, isLive, description, link, specs, buttonn
 // --- Main Page Component ---
 
 export default function Home() {
-  useEffect(() => {
-    const logVisit = async () => {
-      try {
-        const visitorType = localStorage.getItem("visitor_type") === "owner" ? "owner" : "visitor";
-        await fetch("https://halfdigit-api.onrender.com/log-visit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            page_path: visitorType + window.location.pathname,
-            referrer: document.referrer,
-            user_agent: navigator.userAgent
-          })
-        });
-      } catch (err) { }
-    };
-    logVisit();
-  }, []);
+  // useEffect(() => {
+  //   const logVisit = async () => {
+  //     try {
+  //       const visitorType = localStorage.getItem("visitor_type") === "owner" ? "owner" : "visitor";
+  //       await fetch("https://halfdigit-api.onrender.com/log-visit", {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({
+  //           page_path: visitorType + window.location.pathname,
+  //           referrer: document.referrer,
+  //           user_agent: navigator.userAgent
+  //         })
+  //       });
+  //     } catch (err) { }
+  //   };
+  //   logVisit();
+  // }, []);
 
   const openChatBot = () => {
     window.dispatchEvent(new Event('openChatBot'));
