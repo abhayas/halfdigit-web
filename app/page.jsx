@@ -343,7 +343,7 @@ export default function Home() {
               description="Context-aware AI agent that answers questions about my background. Built with LangChain & FAISS to ground GPT-4o responses in factual resume data. (See bottom right)"
             />
             <ProjectModule
-              title="03: Deep Learning Risk Assessor"
+              title="04: Deep Learning Risk Assessor"
               stack={['TensorFlow/Keras', 'Python', 'Microservice']}
               isLive={false}
               specs={[

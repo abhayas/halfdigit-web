@@ -7,7 +7,17 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export const metadata = {
   title: 'HalfDigit | AI Engineering | Abhay Sahu',
-  description: 'Enterprise AI Solutions by Abhay Sahu',
+  description: 'AI Engineer Portfolio',
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+    },
+  },
   // icons: {
   //   icon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>',
   // },

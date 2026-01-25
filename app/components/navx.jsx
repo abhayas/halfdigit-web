@@ -1,0 +1,137 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
+// 1. Added FileText icon for the resume
+import { ChevronDown, BrainCircuit, FileText } from "lucide-react"; 
+
+export default function Navbar() {
+
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClick(e) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
+  }, []);
+
+  const openChatBot = () => {
+    window.dispatchEvent(new Event('openChatBot'));
+  };
+
+  const linkClass = (path) =>
+    `transition-colors text-sm font-medium ${
+      pathname === path ? "text-blue-600" : "text-slate-600 hover:text-blue-600"
+    }`;
+
+  return (
+    <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+      <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+        
+        {/* Brand */}
+        <Link href="/" className="text-lg font-bold text-slate-900 flex items-center gap-2.5 hover:opacity-90 transition-opacity group">
+          <div className="relative flex items-center justify-center p-1.5 rounded-lg bg-blue-50 border border-blue-100 group-hover:border-blue-300 transition-colors shadow-sm">
+            <BrainCircuit size={20} className="text-blue-600" />
+          </div>
+          <span className="tracking-tight group-hover:text-blue-700 transition-colors">HalfDigit</span>
+        </Link>
+
+        {/* Links */}
+        <div className="flex gap-6 items-center">
+          <Link href="/" className={linkClass("/")}>
+            Home
+          </Link>
+
+          {/* My Projects dropdown */}
+          <div className="relative inline-block" ref={dropdownRef}>
+            <button
+              onClick={() => setOpen((s) => !s)}
+              aria-haspopup="true"
+              aria-expanded={open}
+              aria-controls="projects-menu"
+              className={`flex items-center gap-1.5 ${linkClass("/projects")}`}
+            >
+              My Projects <ChevronDown size={14} className={open ? "rotate-180 transition-transform" : "transition-transform"} />
+            </button>
+
+            {/* Dropdown Menu Content */}
+            {open && (
+              <div
+                id="projects-menu"
+                role="menu"
+                className="absolute left-1/2 transform -translate-x-1/2 mt-3 bg-white border border-slate-200 rounded-lg shadow-xl py-2 min-w-[14rem] z-50 overflow-hidden ring-1 ring-slate-900/5"
+              >
+                <div className="px-4 py-2 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                  Live Modules
+                </div>
+                
+                <Link
+                  href="/titanic"
+                  onClick={() => setOpen(false)}
+                  className={`block px-4 py-2.5 text-sm transition-colors ${
+                    pathname === "/titanic" ? "bg-blue-50 text-blue-700 font-medium" : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                  }`}
+                >
+                  01. Titanic Survival
+                </Link>
+
+                <Link
+                  href="/speech-to-text"
+                  onClick={() => setOpen(false)}
+                  className={`block px-4 py-2.5 text-sm transition-colors ${
+                    pathname === "/speech-to-text" ? "bg-blue-50 text-blue-700 font-medium" : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                  }`}
+                >
+                  02. Audio Extraction
+                </Link>
+                <Link
+                  href="/#modules"
+                  onClick={openChatBot}
+                  className={`block px-4 py-2.5 text-sm transition-colors ${
+                    pathname === "/#modules" ? "bg-blue-50 text-blue-700 font-medium" : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                  }`}
+                >
+                  03. Portfolio AI Assistant (RAG)
+                </Link>
+
+                <div className="my-1 border-t border-slate-100"></div>
+                
+                <div className="px-4 py-2 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                  In Development
+                </div>
+
+                <span className="block px-4 py-2 text-sm text-slate-400 cursor-not-allowed italic">
+                  04. Loan Approval
+                </span>
+              </div>
+            )}
+          </div>
+            
+          {/* --- NEW RESUME LINK START --- */}
+          <a 
+            href="/Abhay_Sahu_AI_Engineer.pdf" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="transition-colors text-sm font-medium text-slate-600 hover:text-blue-600 flex items-center gap-1.5"
+          >
+            Resume
+            {/* Small external link icon or text arrow */}
+            <FileText size={14} className="opacity-70" /> 
+          </a>
+          {/* --- NEW RESUME LINK END --- */}
+
+          <Link href="/contact" className={linkClass("/contact")}>
+            Contact
+          </Link>
+        </div>
+      </div>
+    </nav>
+  );
+}
