@@ -4,6 +4,7 @@ import Footer from "./components/Footer";
 import ChatBot from "./components/ChatBot";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 export const metadata = {
   title: 'HalfDigit | AI Engineering | Abhay Sahu',
@@ -38,6 +39,7 @@ export default function RootLayout({ children }) {
         <Footer />
         <ChatBot />
       </body>
+      <GoogleAnalytics gaId="G-S5FMWSX9DG" />
     </html>
   );
 }

@@ -1,15 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { track } from '@vercel/analytics/react';
+// 1. Removed Vercel 'track' import since you are on the free plan
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, BrainCircuit, FileText, Menu, X } from "lucide-react"; // Added Menu, X
+import { ChevronDown, BrainCircuit, FileText, Menu, X } from "lucide-react";
+import { sendGAEvent } from '@next/third-parties/google';
 
 export default function Navbar() {
   const pathname = usePathname();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // New state for mobile
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   // Close dropdowns when clicking outside
@@ -29,9 +30,21 @@ export default function Navbar() {
     setDropdownOpen(false);
   }, [pathname]);
 
-  const openChatBot = () => {
+  // --- TRACKING HELPERS ---
+
+  // 2. Updated Helper for Resume (Standardized)
+  const handleResumeClick = (source) => {
+    sendGAEvent({ event: 'resume_download', value: source });
+  };
+
+  // 3. Updated Helper for ChatBot (Now tracks clicks!)
+  const openChatBot = (source) => {
+    // Track the click before opening
+    sendGAEvent({ event: 'chatbot_opened', value: source });
+    
+    // Original logic
     window.dispatchEvent(new Event('openChatBot'));
-    setMobileMenuOpen(false); // Close mobile menu if open
+    setMobileMenuOpen(false);
   };
 
   const linkClass = (path) =>
@@ -51,7 +64,7 @@ export default function Navbar() {
           <span className="tracking-tight group-hover:text-blue-700 transition-colors">HalfDigit</span>
         </Link>
 
-        {/* --- DESKTOP MENU (Hidden on Mobile) --- */}
+        {/* --- DESKTOP MENU --- */}
         <div className="hidden md:flex gap-6 items-center">
           <Link href="/" className={linkClass("/")}>
             Home
@@ -77,9 +90,14 @@ export default function Navbar() {
                 <Link href="/speech-to-text" className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">
                   02. Audio Extraction
                 </Link>
-                <Link href="/#modules" onClick={openChatBot} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">
+                
+                {/* Updated ChatBot Link (Desktop) */}
+                <button 
+                  onClick={() => openChatBot('desktop_dropdown')} 
+                  className="block w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                >
                   03. Portfolio AI Assistant
-                </Link>
+                </button>
               </div>
             )}
           </div>
@@ -88,9 +106,7 @@ export default function Navbar() {
             href="/Abhay_Sahu_Accenture_AI_Engineer.pdf" 
             target="_blank" 
             rel="noopener noreferrer"
-            onClick={() => {
-              track('Resume Clicked', { location: 'Navbar' });
-            }}
+            onClick={() => handleResumeClick('navbar_desktop')}
             className="transition-colors text-sm font-medium text-slate-600 hover:text-blue-600 flex items-center gap-1.5"
           >
             Resume <FileText size={14} className="opacity-70" /> 
@@ -101,7 +117,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* --- MOBILE HAMBURGER BUTTON (Visible only on Mobile) --- */}
+        {/* --- MOBILE HAMBURGER BUTTON --- */}
         <button 
           className="md:hidden p-2 text-slate-600 hover:text-blue-600 hover:bg-slate-50 rounded-md"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -117,7 +133,6 @@ export default function Navbar() {
             Home
           </Link>
           
-          {/* Mobile Projects Section */}
           <div className="space-y-2 pl-2 border-l-2 border-slate-100">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Projects</span>
             <Link href="/titanic" className="block text-sm text-slate-600 hover:text-blue-600">
@@ -126,17 +141,21 @@ export default function Navbar() {
             <Link href="/speech-to-text" className="block text-sm text-slate-600 hover:text-blue-600">
               Audio Extraction
             </Link>
-            <button onClick={openChatBot} className="block text-sm text-slate-600 hover:text-blue-600 text-left w-full">
+            
+            {/* Updated ChatBot Link (Mobile) */}
+            <button 
+              onClick={() => openChatBot('mobile_menu')} 
+              className="block text-sm text-slate-600 hover:text-blue-600 text-left w-full"
+            >
               AI Assistant
             </button>
           </div>
 
+          {/* Fixed Mobile Resume Link (Switched from Vercel to Google) */}
           <a 
             href="/Abhay_Sahu_Accenture_AI_Engineer.pdf" 
             target="_blank"
-            onClick={() => {
-              track('Resume Clicked', { location: 'Navbar' });
-            }} 
+            onClick={() => handleResumeClick('navbar_mobile')} 
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-blue-600"
           >
