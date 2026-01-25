@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { track } from '@vercel/analytics/react';
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, BrainCircuit, FileText, Menu, X } from "lucide-react"; // Added Menu, X
@@ -87,6 +88,9 @@ export default function Navbar() {
             href="/Abhay_Sahu_Accenture_AI_Engineer.pdf" 
             target="_blank" 
             rel="noopener noreferrer"
+            onClick={() => {
+              track('Resume Clicked', { location: 'Navbar' });
+            }}
             className="transition-colors text-sm font-medium text-slate-600 hover:text-blue-600 flex items-center gap-1.5"
           >
             Resume <FileText size={14} className="opacity-70" /> 
@@ -129,7 +133,10 @@ export default function Navbar() {
 
           <a 
             href="/Abhay_Sahu_Accenture_AI_Engineer.pdf" 
-            target="_blank" 
+            target="_blank"
+            onClick={() => {
+              track('Resume Clicked', { location: 'Navbar' });
+            }} 
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-blue-600"
           >
