@@ -120,7 +120,7 @@ const openChatBot = () => {
           </div>
 
           <Link href="/contact" className={linkClass("/contact")}>
-            Contact Me
+            Contact
           </Link>
         </div>
       </div>
