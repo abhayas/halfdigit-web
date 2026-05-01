@@ -27,7 +27,7 @@ function ExpCalculatorClient({ years, months, days, todayFormatted }) {
 
 export default function ExpCalculator() {
   // Server-side only: Read & Parse Environment Variable
-  const jobs = [{"start":"2007-08-22","end":"2010-04-10"},{"start":"2008-04-17","end":"2010-01-07"},{"start":"2010-06-23","end":"2011-06-30"},{"start":"2011-12-02","end":"2015-04-21"},{"start":"2015-04-24","end":"PRESENT"}]
+  const jobs = [{"start":"2007-08-22","end":"2008-04-10"},{"start":"2008-04-17","end":"2010-01-07"},{"start":"2010-06-23","end":"2011-06-30"},{"start":"2011-12-02","end":"2015-04-21"},{"start":"2015-04-24","end":"PRESENT"}]
   let totalMilliseconds = 0;
 
   jobs.forEach(job => {
