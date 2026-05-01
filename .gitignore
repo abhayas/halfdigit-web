@@ -39,7 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+*.d.ts
 
 # editor setting
 .vscode/
 .idea
+.sfdx/
