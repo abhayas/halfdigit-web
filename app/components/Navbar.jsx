@@ -103,7 +103,7 @@ export default function Navbar() {
           </div>
 
           <a 
-            href="/Abhay_Sahu_Accenture_AI_Engineer.pdf" 
+            href="/Abhay_Sahu_Accenture_AI_ML_Engineer.pdf" 
             target="_blank" 
             rel="noopener noreferrer"
             onClick={() => handleResumeClick('navbar_desktop')}
