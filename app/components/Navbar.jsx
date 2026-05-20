@@ -153,7 +153,7 @@ export default function Navbar() {
 
           {/* Fixed Mobile Resume Link (Switched from Vercel to Google) */}
           <a 
-            href="/Abhay_Sahu_Accenture_AI_Engineer.pdf" 
+            href="/Abhay_Sahu_Accenture_AI_ML_Engineer.pdf" 
             target="_blank"
             onClick={() => handleResumeClick('navbar_mobile')} 
             rel="noopener noreferrer"
