@@ -3,10 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
-// 1. Added User and LogOut icons
 import { ChevronDown, BrainCircuit, FileText, Menu, X, User, LogOut } from "lucide-react";
 import { sendGAEvent } from '@next/third-parties/google';
-// 2. Imported NextAuth hooks
 import { useSession, signOut } from "next-auth/react";
 
 export default function Navbar() {
@@ -15,7 +13,6 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
   
-  // 3. Initialize NextAuth Session
   const { data: session, status } = useSession();
 
   // Close dropdowns when clicking outside
@@ -35,7 +32,6 @@ export default function Navbar() {
     setDropdownOpen(false);
   }, [pathname]);
 
-  // --- TRACKING HELPERS ---
   const handleResumeClick = (source) => {
     sendGAEvent({ event: 'resume_download', value: source });
   };
@@ -113,34 +109,38 @@ export default function Navbar() {
             Contact
           </Link>
 
-          {/* --- NEW: DESKTOP AUTH SECTION --- */}
+          {/* --- DESKTOP AUTH SECTION --- */}
           <div className="pl-4 border-l border-slate-200 flex items-center">
             {status === 'loading' ? (
-              <div className="w-20 h-8 bg-slate-100 animate-pulse rounded-lg"></div>
+              <div className="w-24 h-9 bg-slate-100 animate-pulse rounded-full"></div>
             ) : session ? (
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-slate-50 px-2.5 py-1.5 rounded-full border border-slate-200">
-                  <User size={14} className="text-blue-600" />
-                  {/* Shows just the first name to save space */}
+              <div className="flex items-center bg-white border border-slate-200 rounded-full p-1 pl-4 shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-2 text-sm font-medium text-slate-700 mr-2">
+                  <div className="bg-blue-50 p-1 rounded-full text-blue-600">
+                    <User size={14} />
+                  </div>
                   <span>{session.user?.name?.split(' ')[0]}</span> 
                   {session.user?.role === 'admin' && (
-                    <span className="bg-blue-100 text-blue-700 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wide">Admin</span>
+                    <span className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wide shadow-sm">
+                      Admin
+                    </span>
                   )}
                 </div>
+                <div className="w-px h-4 bg-slate-200 mx-1"></div>
                 <button
                   onClick={() => signOut({ callbackUrl: '/' })}
-                  className="text-slate-400 hover:text-red-600 transition-colors"
+                  className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors flex items-center justify-center group"
                   title="Sign Out"
                 >
-                  <LogOut size={16} />
+                  <LogOut size={16} className="group-hover:scale-110 transition-transform" />
                 </button>
               </div>
             ) : (
               <Link 
                 href="/login" 
-                className="text-sm font-medium bg-slate-900 text-white px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors shadow-sm"
+                className="group relative inline-flex items-center gap-2 text-sm font-bold bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-slate-800 transition-all shadow-md hover:shadow-lg overflow-hidden"
               >
-                Sign In
+                <User size={14} className="opacity-80 group-hover:opacity-100" /> Sign In
               </Link>
             )}
           </div>
@@ -148,7 +148,7 @@ export default function Navbar() {
 
         {/* --- MOBILE HAMBURGER BUTTON --- */}
         <button 
-          className="md:hidden p-2 text-slate-600 hover:text-blue-600 hover:bg-slate-50 rounded-md"
+          className="md:hidden p-2 text-slate-600 hover:text-blue-600 hover:bg-slate-50 rounded-md transition-colors"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -157,24 +157,24 @@ export default function Navbar() {
 
       {/* --- MOBILE MENU DROPDOWN --- */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-100 bg-white px-4 py-4 space-y-4 shadow-lg">
+        <div className="md:hidden border-t border-slate-100 bg-white px-4 py-4 space-y-4 shadow-lg animate-in slide-in-from-top-2">
           <Link href="/" className={`block ${linkClass("/")}`}>
             Home
           </Link>
           
-          <div className="space-y-2 pl-2 border-l-2 border-slate-100">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Projects</span>
-            <Link href="/titanic" className="block text-sm text-slate-600 hover:text-blue-600">
-              Titanic Survival
+          <div className="space-y-3 pl-3 border-l-2 border-slate-100">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Projects</span>
+            <Link href="/titanic" className="block text-sm font-medium text-slate-600 hover:text-blue-600">
+              01. Titanic Survival
             </Link>
-            <Link href="/speech-to-text" className="block text-sm text-slate-600 hover:text-blue-600">
-              Audio Extraction
+            <Link href="/speech-to-text" className="block text-sm font-medium text-slate-600 hover:text-blue-600">
+              02. Audio Extraction
             </Link>
             <button 
               onClick={() => openChatBot('mobile_menu')} 
-              className="block text-sm text-slate-600 hover:text-blue-600 text-left w-full"
+              className="block text-sm font-medium text-slate-600 hover:text-blue-600 text-left w-full"
             >
-              AI Assistant
+              03. Portfolio AI Assistant
             </button>
           </div>
 
@@ -183,31 +183,37 @@ export default function Navbar() {
             target="_blank"
             onClick={() => handleResumeClick('navbar_mobile')} 
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-blue-600"
+            className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-blue-600 pt-2"
           >
-            <FileText size={16} /> Resume
+            <FileText size={16} /> Download Resume
           </a>
 
-          <Link href="/contact" className={`block ${linkClass("/contact")}`}>
+          <Link href="/contact" className={`block pb-2 ${linkClass("/contact")}`}>
             Contact
           </Link>
 
-          {/* --- NEW: MOBILE AUTH SECTION --- */}
-          <div className="pt-4 mt-2 border-t border-slate-100">
+          {/* --- MOBILE AUTH SECTION --- */}
+          <div className="pt-4 border-t border-slate-100">
             {status === 'loading' ? (
-              <div className="w-full h-10 bg-slate-100 animate-pulse rounded-lg"></div>
+              <div className="w-full h-24 bg-slate-100 animate-pulse rounded-xl"></div>
             ) : session ? (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                  <User size={16} className="text-blue-600" />
-                  {session.user?.name}
-                  {session.user?.role === 'admin' && (
-                    <span className="bg-blue-100 text-blue-700 text-[10px] px-1.5 py-0.5 rounded font-bold uppercase">Admin</span>
-                  )}
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 shadow-sm">
+                <div className="flex items-center gap-3 mb-3 pb-3 border-b border-slate-200">
+                  <div className="bg-blue-100 p-2 rounded-full text-blue-600 shrink-0">
+                    <User size={18} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-bold text-slate-800">{session.user?.name}</span>
+                    {session.user?.role === 'admin' ? (
+                      <span className="text-[10px] text-blue-600 font-bold uppercase tracking-wide">Admin Account</span>
+                    ) : (
+                      <span className="text-[10px] text-slate-500">User Account</span>
+                    )}
+                  </div>
                 </div>
                 <button 
                   onClick={() => signOut({ callbackUrl: '/' })} 
-                  className="flex items-center gap-1.5 text-sm font-medium text-red-600"
+                  className="w-full flex items-center justify-center gap-2 bg-white border border-red-200 text-red-600 py-2.5 rounded-lg hover:bg-red-50 hover:border-red-300 transition-all text-sm font-bold shadow-sm"
                 >
                   <LogOut size={16} /> Sign Out
                 </button>
@@ -215,9 +221,9 @@ export default function Navbar() {
             ) : (
               <Link 
                 href="/login" 
-                className="block w-full text-center bg-slate-900 text-white px-4 py-2.5 rounded-lg text-sm font-medium"
+                className="flex justify-center items-center gap-2 w-full bg-blue-600 text-white px-4 py-3 rounded-xl text-sm font-bold shadow-md hover:bg-slate-800 transition-colors"
               >
-                Sign In
+                <User size={16} /> Sign In
               </Link>
             )}
           </div>
