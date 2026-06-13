@@ -1,17 +1,22 @@
 "use client";
 
 import Link from "next/link";
-// 1. Removed Vercel 'track' import since you are on the free plan
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, BrainCircuit, FileText, Menu, X } from "lucide-react";
+// 1. Added User and LogOut icons
+import { ChevronDown, BrainCircuit, FileText, Menu, X, User, LogOut } from "lucide-react";
 import { sendGAEvent } from '@next/third-parties/google';
+// 2. Imported NextAuth hooks
+import { useSession, signOut } from "next-auth/react";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
+  
+  // 3. Initialize NextAuth Session
+  const { data: session, status } = useSession();
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -31,18 +36,12 @@ export default function Navbar() {
   }, [pathname]);
 
   // --- TRACKING HELPERS ---
-
-  // 2. Updated Helper for Resume (Standardized)
   const handleResumeClick = (source) => {
     sendGAEvent({ event: 'resume_download', value: source });
   };
 
-  // 3. Updated Helper for ChatBot (Now tracks clicks!)
   const openChatBot = (source) => {
-    // Track the click before opening
     sendGAEvent({ event: 'chatbot_opened', value: source });
-    
-    // Original logic
     window.dispatchEvent(new Event('openChatBot'));
     setMobileMenuOpen(false);
   };
@@ -90,8 +89,6 @@ export default function Navbar() {
                 <Link href="/speech-to-text" className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">
                   02. Audio Extraction
                 </Link>
-                
-                {/* Updated ChatBot Link (Desktop) */}
                 <button 
                   onClick={() => openChatBot('desktop_dropdown')} 
                   className="block w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600"
@@ -115,6 +112,38 @@ export default function Navbar() {
           <Link href="/contact" className={linkClass("/contact")}>
             Contact
           </Link>
+
+          {/* --- NEW: DESKTOP AUTH SECTION --- */}
+          <div className="pl-4 border-l border-slate-200 flex items-center">
+            {status === 'loading' ? (
+              <div className="w-20 h-8 bg-slate-100 animate-pulse rounded-lg"></div>
+            ) : session ? (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-slate-50 px-2.5 py-1.5 rounded-full border border-slate-200">
+                  <User size={14} className="text-blue-600" />
+                  {/* Shows just the first name to save space */}
+                  <span>{session.user?.name?.split(' ')[0]}</span> 
+                  {session.user?.role === 'admin' && (
+                    <span className="bg-blue-100 text-blue-700 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wide">Admin</span>
+                  )}
+                </div>
+                <button
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                  className="text-slate-400 hover:text-red-600 transition-colors"
+                  title="Sign Out"
+                >
+                  <LogOut size={16} />
+                </button>
+              </div>
+            ) : (
+              <Link 
+                href="/login" 
+                className="text-sm font-medium bg-slate-900 text-white px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors shadow-sm"
+              >
+                Sign In
+              </Link>
+            )}
+          </div>
         </div>
 
         {/* --- MOBILE HAMBURGER BUTTON --- */}
@@ -141,8 +170,6 @@ export default function Navbar() {
             <Link href="/speech-to-text" className="block text-sm text-slate-600 hover:text-blue-600">
               Audio Extraction
             </Link>
-            
-            {/* Updated ChatBot Link (Mobile) */}
             <button 
               onClick={() => openChatBot('mobile_menu')} 
               className="block text-sm text-slate-600 hover:text-blue-600 text-left w-full"
@@ -151,7 +178,6 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Fixed Mobile Resume Link (Switched from Vercel to Google) */}
           <a 
             href="/Abhay_Sahu_Accenture_AI_ML_Engineer.pdf" 
             target="_blank"
@@ -165,6 +191,36 @@ export default function Navbar() {
           <Link href="/contact" className={`block ${linkClass("/contact")}`}>
             Contact
           </Link>
+
+          {/* --- NEW: MOBILE AUTH SECTION --- */}
+          <div className="pt-4 mt-2 border-t border-slate-100">
+            {status === 'loading' ? (
+              <div className="w-full h-10 bg-slate-100 animate-pulse rounded-lg"></div>
+            ) : session ? (
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                  <User size={16} className="text-blue-600" />
+                  {session.user?.name}
+                  {session.user?.role === 'admin' && (
+                    <span className="bg-blue-100 text-blue-700 text-[10px] px-1.5 py-0.5 rounded font-bold uppercase">Admin</span>
+                  )}
+                </div>
+                <button 
+                  onClick={() => signOut({ callbackUrl: '/' })} 
+                  className="flex items-center gap-1.5 text-sm font-medium text-red-600"
+                >
+                  <LogOut size={16} /> Sign Out
+                </button>
+              </div>
+            ) : (
+              <Link 
+                href="/login" 
+                className="block w-full text-center bg-slate-900 text-white px-4 py-2.5 rounded-lg text-sm font-medium"
+              >
+                Sign In
+              </Link>
+            )}
+          </div>
         </div>
       )}
     </nav>
